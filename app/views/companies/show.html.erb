@@ -1,0 +1,9 @@
+<h1>Company Info:</h1>
+<h2><%= @company.company_name %></h2>
+<p><strong>Catchphrase: </strong><%= @company.catchphrase %></p>
+<p><strong>Buzzword:</strong> <%= @company.buzzword %></p>
+<p><strong>Corporate Jargon (aka BS): </strong><%= @company.bullshiza %></p>
+<p><strong>Hipster Bob Says: </strong><%= @company.hipster_bob_says %></p>
+<div>
+  <%= link_to 'Delete this company', "/companies/#{@company.id}", method: :delete %>
+</div>
