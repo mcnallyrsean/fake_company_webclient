@@ -1,6 +1,12 @@
 class Company
 
   attr_accessor :id, :company_name, :catchphrase, :buzzword, :bullshiza, :hipster_bob_says
+  @@headers = {
+    "Accept" => "application/json",
+    "Authorization" => "Token token=#{ENV['API_KEY']}",
+    "X-User-Email" => "#{ENV['API_EMAIL']}"
+  }
+
 
   def initialize(input_options)
     @id = input_options['id']
@@ -17,7 +23,9 @@ class Company
 
 
   def self.all
-    company_options_hashes = Unirest.get("#{ENV['API_BASE_URL']}/companies.json").body
+    company_options_hashes = Unirest.get("#{ENV['API_BASE_URL']}/companies.json",
+      headers: @@headers
+      ).body
     @companies = []
     company_options_hashes.each do |company_options_hash|
       @companies << Company.new(company_options_hash)
@@ -27,14 +35,16 @@ class Company
 
   def self.find_by(input_options)
     id = input_options[:id]
-    company_options_hash = Unirest.get("#{ENV['API_BASE_URL']}/companies/#{id}.json").body
+    company_options_hash = Unirest.get("#{ENV['API_BASE_URL']}/companies/#{id}.json",
+      headers: @@headers  
+      ).body
     Company.new(company_options_hash)
   end
 
   def self.create(input_options)
     company_options_hash = Unirest.post(
       "#{ENV['API_BASE_URL']}/companies.json", 
-      headers: {"Accept" => "application/json"}, 
+      headers: @@headers, 
       parameters: input_options).body
     Company.new(company_options_hash)
   end
@@ -42,13 +52,14 @@ class Company
   def self.update(input_options)
     Unirest.patch(
       "#{ENV['API_BASE_URL']}/companies/#{id}.json", 
-      headers: {"Accept" => "application/json"}, 
+      headers: @@headers, 
       parameters: input_options).body
   end
 
   def destroy
     @company = Unirest.delete(
-      "#{ENV['API_BASE_URL']}/companies/#{id}.json"
+      "#{ENV['API_BASE_URL']}/companies/#{id}.json",
+      headers: @@headers
       ).body
   end
 end
